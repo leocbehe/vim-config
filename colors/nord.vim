@@ -1,0 +1,1 @@
+/home/leo/.vim/nord-vim/colors/nord.vim
