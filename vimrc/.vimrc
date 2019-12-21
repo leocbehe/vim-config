@@ -77,17 +77,25 @@ augroup END
 " }}}
 
 " Python filetype --- {{{
-" augroup python_filetype
-   " autocmd FileType python nnoremap <buffer> <localleader>c I#<space><esc>
-   " autocmd FileType python nnoremap <buffer> <localleader>C VipV`<O'''<esc>`>o'''<esc>
-" augroup END
+augroup python_filetype
+   autocmd FileType python nnoremap <buffer> <localleader>c I#<space><esc>
+   autocmd FileType python nnoremap <buffer> <localleader>C VipV`<O'''<esc>`>o'''<esc>
+   " I spent a long time trying to figure out why tabs weren't being expanded in
+   " Python files. Eventually I gave up and explicitly remapped the tab key.
+   autocmd FileType python inoremap <Tab> <space><space><space>
+   " Overwriting some setting I can't track down
+   autocmd FileType python set shiftwidth=3
+   autocmd FileType python iabbrev ifname if __name__ == "__main__":<cr><Tab>main()
+augroup END
 " }}}
 
-" function MakeProperty(propName)
-"    let l:privateName = a:propName . "__"
-"    echom l:privateName
-"    return l:privateName
-" endfunction
+" C++ filetype --- {{{
+augroup cpp_filetype
+   autocmd FileType cpp inoremap { {}<esc>i
+   autocmd FileType cpp inoremap ( ()<esc>i
+   autocmd FileType cpp inoremap [ []<esc>i
+augroup END
+" }}}
 
 " Javascript filetype --- {{{
 augroup javascript_filetype
@@ -100,4 +108,26 @@ augroup END
 augroup markdown_filetype
    autocmd!
 augroup END
+" }}}
+
+" Functions --- {{{
+
+" This is my first function so leave me alone
+function! Pyinit(...)
+   " Build header line
+   let l:init_string = "def __init__(self"
+   for argvar in a:000
+      let l:init_string = l:init_string . "," . argvar
+   endfor
+   let l:init_string = l:init_string . "):"
+
+   " Build body
+   for argvar in a:000
+      let l:newline = "self." . argvar . " = " . argvar
+      let l:init_string = l:init_string . "\n   " . l:newline
+   endfor
+   
+   return l:init_string
+endfunction
+
 " }}}
