@@ -3,3 +3,6 @@
 
 #ignore nord repo
 nord-vim
+
+#ignore netrw stuff
+.netrwhist
